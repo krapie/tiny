@@ -1,8 +1,10 @@
-name: CI
+name: CI - Web
 
 on:
   push:
     branches: [main]
+    paths:
+      - "web/**"
 
 jobs:
   build-and-deploy:
@@ -24,9 +26,11 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./web
           push: true
-          tags: krapi0314/tiny:${{ env.IMAGE_TAG }}
+          tags: krapi0314/tiny-web:${{ env.IMAGE_TAG }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=https://tiny-api.kevinprk.com
 
       - name: Checkout homeserver repo
         uses: actions/checkout@v4
@@ -37,14 +41,14 @@ jobs:
 
       - name: Update image tag in deployment manifest
         run: |
-          sed -i "s|krapi0314/tiny:.*|krapi0314/tiny:${{ env.IMAGE_TAG }}|" \
-            homeserver/k8s/tiny/deployment.yaml
+          sed -i "s|krapi0314/tiny-web:.*|krapi0314/tiny-web:${{ env.IMAGE_TAG }}|" \
+            homeserver/k8s/tiny/tiny-web.yaml
 
       - name: Commit and push manifest update
         run: |
           cd homeserver
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add k8s/tiny/deployment.yaml
-          git commit -m "deploy: tiny ${{ env.IMAGE_TAG }}"
+          git add k8s/tiny/tiny-web.yaml
+          git commit -m "deploy: tiny-web ${{ env.IMAGE_TAG }}"
           git push
