@@ -11,6 +11,8 @@ import (
 	appdb "github.com/krapi/tiny-api/internal/db"
 	"github.com/krapi/tiny-api/internal/handler"
 	"github.com/krapi/tiny-api/internal/service"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -22,6 +24,18 @@ func main() {
 	}
 	defer db.Close()
 
+	prometheus.MustRegister(prometheus.NewGaugeFunc(
+		prometheus.GaugeOpts{
+			Name: "tiny_urls_total",
+			Help: "Total number of shortened URLs created",
+		},
+		func() float64 {
+			var n float64
+			db.QueryRow("SELECT COUNT(*) FROM urls").Scan(&n)
+			return n
+		},
+	))
+
 	urlSvc := service.NewURLService(db)
 	urlH := handler.NewURLHandler(urlSvc)
 
@@ -29,6 +43,8 @@ func main() {
 	r.Use(chimiddleware.Logger)
 	r.Use(chimiddleware.Recoverer)
 	r.Use(corsMiddleware)
+
+	r.Handle("/metrics", promhttp.Handler())
 
 	r.Post("/api/shorten", urlH.Shorten)
 	r.Get("/api/urls/{code}", urlH.GetInfo)
