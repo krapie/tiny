@@ -163,7 +163,7 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
   flex-shrink: 0;
 }
 .theme-toggle:hover { background: var(--kp-hover-bg); color: var(--kp-fg); }
-.tiny-pi-mark {
+.tiny-app-icon {
   width: 24px;
   height: 24px;
   border-radius: var(--kp-radius-sm);
@@ -171,10 +171,6 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
   color: var(--kp-bg);
   display: grid;
   place-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1;
-  font-family: var(--kp-font-sans);
   transition: background var(--kp-dur-base) var(--kp-ease), color var(--kp-dur-base) var(--kp-ease);
 }
 .tiny-title {

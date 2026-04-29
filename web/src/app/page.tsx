@@ -2,6 +2,14 @@
 
 import { useState, useEffect } from "react";
 
+function TinyIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="14" height="14">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.69a4.5 4.5 0 016.36 6.36l-3.18 3.18a4.5 4.5 0 01-6.36-6.36m6.36-3.18l-3.18 3.18m-3.18 3.18l-3.18 3.18a4.5 4.5 0 01-6.36-6.36l3.18-3.18a4.5 4.5 0 016.36 0" />
+    </svg>
+  );
+}
+
 function SunIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="16" height="16">
@@ -85,7 +93,9 @@ export default function Home() {
       <div className="tiny-card">
         <div className="tiny-header">
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span className="tiny-pi-mark">π</span>
+            <span className="tiny-app-icon">
+              <TinyIcon />
+            </span>
             <span className="tiny-title">Tiny</span>
           </div>
           <button
