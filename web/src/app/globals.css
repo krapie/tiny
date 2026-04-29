@@ -147,9 +147,22 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 .tiny-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
   margin-bottom: var(--kp-space-7);
 }
+
+/* Theme toggle */
+.theme-toggle {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--kp-radius-sm);
+  display: grid;
+  place-items: center;
+  color: var(--kp-fg-3);
+  transition: background var(--kp-dur-fast) var(--kp-ease), color var(--kp-dur-fast) var(--kp-ease);
+  flex-shrink: 0;
+}
+.theme-toggle:hover { background: var(--kp-hover-bg); color: var(--kp-fg); }
 .tiny-pi-mark {
   width: 24px;
   height: 24px;

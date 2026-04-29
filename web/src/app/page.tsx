@@ -1,6 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="16" height="16">
+      <circle cx="12" cy="12" r="4" />
+      <path strokeLinecap="round" d="M12 3v1.5M12 19.5V21M3 12h1.5M19.5 12H21M5.6 5.6l1.06 1.06M17.34 17.34l1.06 1.06M5.6 18.4l1.06-1.06M17.34 6.66l1.06-1.06" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="16" height="16">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
+    </svg>
+  );
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
@@ -18,6 +35,11 @@ export default function Home() {
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   async function handleShorten(e: React.FormEvent) {
     e.preventDefault();
@@ -62,8 +84,18 @@ export default function Home() {
     <main className="tiny-page">
       <div className="tiny-card">
         <div className="tiny-header">
-          <span className="tiny-pi-mark">π</span>
-          <span className="tiny-title">Tiny</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <span className="tiny-pi-mark">π</span>
+            <span className="tiny-title">Tiny</span>
+          </div>
+          <button
+            className="theme-toggle"
+            onClick={() => setTheme((t) => t === "light" ? "dark" : "light")}
+            aria-label="toggle theme"
+            title="toggle theme"
+          >
+            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+          </button>
         </div>
 
         <form onSubmit={handleShorten} className="tiny-form">
