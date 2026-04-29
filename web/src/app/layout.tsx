@@ -1,15 +1,13 @@
-import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-const geist = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+};
 
 export const metadata: Metadata = {
   title: "Tiny",
-  description: "Shorten any URL instantly.",
+  description: "URL shortener with QR code generation.",
   metadataBase: new URL("https://tiny.kevinprk.com"),
   icons: {
     icon: [
@@ -19,7 +17,6 @@ export const metadata: Metadata = {
     apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
   },
   manifest: "/manifest.json",
-  themeColor: "#6366f1",
   appleWebApp: {
     capable: true,
     title: "Tiny",
@@ -29,12 +26,12 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://tiny.kevinprk.com",
     title: "Tiny",
-    description: "Shorten any URL instantly.",
+    description: "URL shortener with QR code generation.",
   },
   twitter: {
     card: "summary",
     title: "Tiny",
-    description: "Shorten any URL instantly.",
+    description: "URL shortener with QR code generation.",
   },
 };
 
@@ -44,8 +41,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geist.variable} h-full antialiased`}>
-      <body className="h-full bg-zinc-950 text-zinc-100">{children}</body>
+    <html lang="en" style={{ height: "100%" }}>
+      <body style={{ height: "100%" }}>{children}</body>
     </html>
   );
 }
