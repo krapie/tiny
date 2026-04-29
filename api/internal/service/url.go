@@ -7,6 +7,7 @@ import (
 	"net/url"
 
 	"github.com/krapi/tiny-api/internal/model"
+	"github.com/krapi/tiny-api/internal/umami"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -50,6 +51,7 @@ func (s *URLService) Shorten(originalURL, customCode string) (*model.URL, error)
 	if err != nil {
 		return nil, fmt.Errorf("insert url: %w", err)
 	}
+	go umami.Send("url_shortened")
 	return &u, nil
 }
 
