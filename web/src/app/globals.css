@@ -84,6 +84,18 @@
   --kp-page-pad:      24px;
 }
 
+@media (min-width: 640px) {
+  :root {
+    --kp-page-pad: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --kp-page-pad: 48px;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --kp-bg:         var(--kp-black);
@@ -141,6 +153,12 @@ button { font: inherit; cursor: pointer; background: none; border: none; color: 
 .tiny-card {
   width: 100%;
   max-width: 480px;
+}
+@media (min-width: 640px) {
+  .tiny-card { max-width: 520px; }
+}
+@media (min-width: 1024px) {
+  .tiny-card { max-width: 560px; }
 }
 
 /* Header mark */
