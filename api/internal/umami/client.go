@@ -33,5 +33,6 @@ func Send(event string) {
 		return
 	}
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; tiny-api/1.0)")
 	http.DefaultClient.Do(req) //nolint:errcheck
 }

@@ -68,6 +68,7 @@ func (s *URLService) GetByCode(code string) (*model.URL, error) {
 	if err != nil {
 		return nil, fmt.Errorf("get url: %w", err)
 	}
+	go umami.Send("link_clicked")
 	return &u, nil
 }
 
