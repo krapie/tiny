@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -43,6 +44,11 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ height: "100%" }}>
       <body style={{ height: "100%" }}>{children}</body>
+      <Script
+        src="https://analytics.kevinprk.com/script.js"
+        data-website-id="e37e409b-8bbb-42f1-ba22-7e0f88fe8567"
+        strategy="afterInteractive"
+      />
     </html>
   );
 }
