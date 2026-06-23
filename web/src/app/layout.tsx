@@ -46,7 +46,7 @@ export default function RootLayout({
       <body style={{ height: "100%" }}>{children}</body>
       <Script
         src="https://analytics.kevinprk.com/script.js"
-        data-website-id="e37e409b-8bbb-42f1-ba22-7e0f88fe8567"
+        data-website-id="7ef222d4-ecb2-4902-80d9-34dbb33de61c"
         strategy="afterInteractive"
       />
     </html>
