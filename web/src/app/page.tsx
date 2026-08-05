@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 function TinyIcon() {
   return (
@@ -97,12 +98,12 @@ export default function Home() {
     <main className="tiny-page">
       <div className="tiny-card">
         <div className="tiny-header">
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none", color: "inherit" }}>
             <span className="tiny-app-icon">
               <TinyIcon />
             </span>
             <span className="tiny-title">Tiny</span>
-          </div>
+          </Link>
           <button
             className="theme-toggle"
             onClick={() => setTheme((t) => t === "light" ? "dark" : "light")}
