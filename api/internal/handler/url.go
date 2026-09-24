@@ -90,19 +90,3 @@ func (h *URLHandler) Redirect(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, u.Original, http.StatusFound)
 }
 
-// RedirectInfo increments click count and returns the original URL as JSON.
-// Used by the Next.js frontend to perform server-side redirects.
-func (h *URLHandler) RedirectInfo(w http.ResponseWriter, r *http.Request) {
-	code := chi.URLParam(r, "code")
-	u, err := h.svc.GetByCode(code)
-	if err != nil {
-		http.Error(w, "internal error", http.StatusInternalServerError)
-		return
-	}
-	if u == nil {
-		http.Error(w, "not found", http.StatusNotFound)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"original_url": u.Original})
-}

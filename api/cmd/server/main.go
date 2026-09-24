@@ -48,7 +48,6 @@ func main() {
 
 	r.Post("/api/shorten", urlH.Shorten)
 	r.Get("/api/urls/{code}", urlH.GetInfo)
-	r.Get("/api/redirect/{code}", urlH.RedirectInfo)
 	r.Get("/api/qr/{code}", urlH.QRCode)
 	r.Get("/{code}", urlH.Redirect)
 
