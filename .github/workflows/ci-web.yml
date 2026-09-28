@@ -53,8 +53,10 @@ jobs:
           # No-op when k8s/web does not reference this image yet (first deploy).
           git diff --cached --quiet && { echo "manifest unchanged"; exit 0; }
           git commit -m "deploy: tiny-web ${{ env.IMAGE_TAG }}"
-          for i in 1 2 3 4 5; do
-            git push && break
+          for i in $(seq 1 10); do
+            git push && exit 0
             git pull --rebase
             sleep $((RANDOM % 5 + 3))
           done
+          echo "::error::manifest push failed after 10 attempts"
+          exit 1
