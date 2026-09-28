@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"os"
 	"strings"
@@ -33,7 +34,7 @@ func (h *URLHandler) Shorten(w http.ResponseWriter, r *http.Request) {
 
 	u, err := h.svc.Shorten(req.URL, strings.TrimSpace(req.Code))
 	if err != nil {
-		if err.Error() == "code already taken" || err.Error() == "invalid URL" || strings.HasPrefix(err.Error(), "URL must") {
+		if errors.Is(err, service.ErrBlockedDomain) || err.Error() == "code already taken" || err.Error() == "invalid URL" || strings.HasPrefix(err.Error(), "URL must") {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -79,6 +80,10 @@ func (h *URLHandler) GetInfo(w http.ResponseWriter, r *http.Request) {
 func (h *URLHandler) Redirect(w http.ResponseWriter, r *http.Request) {
 	code := chi.URLParam(r, "code")
 	u, err := h.svc.GetByCode(code)
+	if errors.Is(err, service.ErrBlockedDomain) {
+		http.Error(w, "this link has been disabled", http.StatusGone)
+		return
+	}
 	if err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 		return
@@ -89,4 +94,3 @@ func (h *URLHandler) Redirect(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, u.Original, http.StatusFound)
 }
-

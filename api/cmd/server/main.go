@@ -36,7 +36,7 @@ func main() {
 		},
 	))
 
-	urlSvc := service.NewURLService(db)
+	urlSvc := service.NewURLService(db, service.NewBlocklistFromEnv())
 	urlH := handler.NewURLHandler(urlSvc)
 
 	r := chi.NewRouter()

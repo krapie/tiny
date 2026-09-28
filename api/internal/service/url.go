@@ -13,16 +13,20 @@ import (
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 type URLService struct {
-	db *sql.DB
+	db        *sql.DB
+	blocklist *Blocklist
 }
 
-func NewURLService(db *sql.DB) *URLService {
-	return &URLService{db: db}
+func NewURLService(db *sql.DB, blocklist *Blocklist) *URLService {
+	return &URLService{db: db, blocklist: blocklist}
 }
 
 func (s *URLService) Shorten(originalURL, customCode string) (*model.URL, error) {
 	if err := validateURL(originalURL); err != nil {
 		return nil, err
+	}
+	if s.blocklist.Blocked(originalURL) {
+		return nil, ErrBlockedDomain
 	}
 
 	code := customCode
@@ -55,9 +59,19 @@ func (s *URLService) Shorten(originalURL, customCode string) (*model.URL, error)
 	return &u, nil
 }
 
+// GetByCode resolves a code for redirection and counts the click. Links whose
+// destination was blocklisted after creation return ErrBlockedDomain uncounted.
 func (s *URLService) GetByCode(code string) (*model.URL, error) {
+	info, err := s.GetInfoByCode(code)
+	if err != nil || info == nil {
+		return info, err
+	}
+	if s.blocklist.Blocked(info.Original) {
+		return nil, ErrBlockedDomain
+	}
+
 	var u model.URL
-	err := s.db.QueryRow(
+	err = s.db.QueryRow(
 		`UPDATE urls SET clicks = clicks + 1 WHERE code = $1
 		 RETURNING id, code, original, clicks, created_at`,
 		code,
