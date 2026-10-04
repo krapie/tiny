@@ -79,7 +79,7 @@ func (h *URLHandler) GetInfo(w http.ResponseWriter, r *http.Request) {
 
 func (h *URLHandler) Redirect(w http.ResponseWriter, r *http.Request) {
 	code := chi.URLParam(r, "code")
-	u, err := h.svc.GetByCode(code)
+	u, err := h.svc.GetByCode(code, !isCanary(r))
 	if errors.Is(err, service.ErrBlockedDomain) {
 		http.Error(w, "this link has been disabled", http.StatusGone)
 		return
@@ -93,4 +93,10 @@ func (h *URLHandler) Redirect(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, u.Original, http.StatusFound)
+}
+
+// isCanary reports a request from the external canaries (blackbox exporter on
+// the AWS workers, homeserver k8s/monitoring/values/blackbox-exporter.yaml).
+func isCanary(r *http.Request) bool {
+	return strings.HasPrefix(r.UserAgent(), "kevinprk-canary/")
 }

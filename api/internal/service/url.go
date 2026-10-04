@@ -61,7 +61,9 @@ func (s *URLService) Shorten(originalURL, customCode string) (*model.URL, error)
 
 // GetByCode resolves a code for redirection and counts the click. Links whose
 // destination was blocklisted after creation return ErrBlockedDomain uncounted.
-func (s *URLService) GetByCode(code string) (*model.URL, error) {
+// GetByCode resolves a short code and counts the click. track=false skips the
+// analytics event (the external canaries, which request a fixed link every 20s).
+func (s *URLService) GetByCode(code string, track bool) (*model.URL, error) {
 	info, err := s.GetInfoByCode(code)
 	if err != nil || info == nil {
 		return info, err
@@ -82,7 +84,9 @@ func (s *URLService) GetByCode(code string) (*model.URL, error) {
 	if err != nil {
 		return nil, fmt.Errorf("get url: %w", err)
 	}
-	go umami.Send("link_clicked")
+	if track {
+		go umami.Send("link_clicked")
+	}
 	return &u, nil
 }
 
