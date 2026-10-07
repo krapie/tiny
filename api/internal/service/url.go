@@ -59,10 +59,12 @@ func (s *URLService) Shorten(originalURL, customCode string) (*model.URL, error)
 	return &u, nil
 }
 
-// GetByCode resolves a code for redirection and counts the click. Links whose
-// destination was blocklisted after creation return ErrBlockedDomain uncounted.
-// GetByCode resolves a short code and counts the click. track=false skips the
-// analytics event (the external canaries, which request a fixed link every 20s).
+// GetByCode resolves a short code for redirection and counts the click.
+// Links whose destination was blocklisted after creation return
+// ErrBlockedDomain uncounted. track=false (the external canaries, which
+// request a fixed link every 20s) neither counts the click nor sends the
+// analytics event, so canary traffic never shows up in click rankings; the
+// lookup still reads the database, so a DB outage still fails the canary.
 func (s *URLService) GetByCode(code string, track bool) (*model.URL, error) {
 	info, err := s.GetInfoByCode(code)
 	if err != nil || info == nil {
@@ -70,6 +72,9 @@ func (s *URLService) GetByCode(code string, track bool) (*model.URL, error) {
 	}
 	if s.blocklist.Blocked(info.Original) {
 		return nil, ErrBlockedDomain
+	}
+	if !track {
+		return info, nil
 	}
 
 	var u model.URL
@@ -84,9 +89,7 @@ func (s *URLService) GetByCode(code string, track bool) (*model.URL, error) {
 	if err != nil {
 		return nil, fmt.Errorf("get url: %w", err)
 	}
-	if track {
-		go umami.Send("link_clicked")
-	}
+	go umami.Send("link_clicked")
 	return &u, nil
 }
 

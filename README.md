@@ -18,5 +18,5 @@ The API requires a PostgreSQL database; set `DATABASE_URL` in the environment.
 
 - **URL shortening** — paste any URL and get a short link under `tiny.kevinprk.com/<code>` in one click
 - **QR code generation** — every shortened link comes with a downloadable QR code for sharing in print or on screen
-- **Click analytics** — each short link tracks its total click count so you can see how often it's been used
+- **Click analytics** — each short link tracks its total click count so you can see how often it's been used. Requests from the external canaries (User-Agent `kevinprk-canary/`, which hit the permanent `/canary` link every 20s) are not counted and send no analytics event
 - **Redirect** — visiting a short link redirects immediately to the original URL with no interstitial page
