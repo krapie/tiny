@@ -49,6 +49,7 @@ export default function RootLayout({
         data-website-id="7ef222d4-ecb2-4902-80d9-34dbb33de61c"
         strategy="afterInteractive"
       />
+      <Script src="https://rum.kevinprk.com/rum.js" data-app="tiny" strategy="afterInteractive" />
     </html>
   );
 }
