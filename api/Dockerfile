@@ -5,7 +5,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o tiny-api ./cmd/server
 
-FROM alpine:3.19 AS runner
+FROM alpine:3.20 AS runner
 RUN apk --no-cache add ca-certificates
 WORKDIR /app
 COPY --from=builder /app/tiny-api .
