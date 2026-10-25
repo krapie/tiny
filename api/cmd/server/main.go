@@ -40,6 +40,7 @@ func main() {
 	urlH := handler.NewURLHandler(urlSvc)
 
 	r := chi.NewRouter()
+	r.Use(chimiddleware.RequestID) // keeps the gateway's X-Request-Id; chi's Logger prints it (R7.2)
 	r.Use(chimiddleware.Logger)
 	r.Use(chimiddleware.Recoverer)
 	r.Use(corsMiddleware)
